@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WhatsApp QR Scanner</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 50px;
+    }
+    .form-container {
+      margin-bottom: 20px;
+    }
+    img {
+      margin-top: 20px;
+      max-width: 200px;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h1>Enter Phone Number to Generate QR Code</h1>
+    <form action="/generate" method="POST">
+      <input type="text" name="phoneNumber" placeholder="Enter your phone number" required>
+      <button type="submit">Generate QR Code</button>
+    </form>
+  </div>
+
+  <% if (qrCodeUrl) { %>
+    <div>
+      <h2>Your QR Code for Phone Number: <%= phoneNumber %></h2>
+      <img src="<%= qrCodeUrl %>" alt="QR Code">
+    </div>
+  <% } %>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp Scanner</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>WhatsApp Pairing</h1>
+        <div class="form-box">
+            <input type="text" id="phoneNumber" placeholder="Enter your phone number">
+            <button onclick="getQRCode()">Get Pairing QR Code</button>
+        </div>
+        <div id="qrCodeBox">
+            <!-- QR Code will be displayed here -->
+        </div>
+    </div>
+
+    <script>
+        async function getQRCode() {
+            const phoneNumber = document.getElementById('phoneNumber').value;
+            if (!phoneNumber) {
+                alert('Please enter your phone number');
+                return;
+            }
+
+            const res = await fetch('/get-qr');
+            const data = await res.json();
+
+            const qrCodeBox = document.getElementById('qrCodeBox');
+            qrCodeBox.innerHTML = `<h3>Scan the QR Code below with WhatsApp:</h3><img src="data:image/png;base64,${data.qr}" alt="QR Code">`;
+        }
+    </script>
+</body>
+</html>
