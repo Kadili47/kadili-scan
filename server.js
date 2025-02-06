@@ -1,40 +1,34 @@
 const express = require('express');
-const QRCode = require('qrcode');
 const path = require('path');
-
+const QRCode = require('qrcode');
 const app = express();
 const port = process.env.PORT || 3000;
 
 // Set EJS as view engine
 app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
 
-// Use static folder for assets (CSS, images)
+// Serve static files (CSS, JS, images)
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Middleware to parse form data
-app.use(express.urlencoded({ extended: true }));
-
-// Home route
+// Home route - Display the form for inputting phone number
 app.get('/', (req, res) => {
   res.render('index');
 });
 
-// Route to generate QR code from entered number
-app.post('/generate', (req, res) => {
-  const phoneNumber = req.body.phoneNumber;
-  if (!phoneNumber) {
-    return res.send('Please enter a phone number.');
-  }
-  
-  QRCode.toDataURL(phoneNumber, (err, url) => {
+// QR page route - Show the QR code based on the phone number
+app.post('/generate-qr', (req, res) => {
+  const { phoneNumber } = req.body;  // Assuming you handle body parsing for form submission
+  const qrData = `https://wa.me/${phoneNumber}`; // QR Code will link to WhatsApp number
+  QRCode.toDataURL(qrData, (err, url) => {
     if (err) {
-      return res.send('Error generating QR code.');
+      return res.status(500).send('Error generating QR code');
     }
-    
-    res.render('index', { qrCodeUrl: url, phoneNumber });
+    res.render('qrpage', { qrCodeUrl: url });
   });
 });
 
+// Start the server
 app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
+  console.log(`Server is running on port ${port}`);
 });
